@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   DOMVS AVREA - Produktliste
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+  </style>
+ </head>
+ <body>
+  <h1>
+   PRODUCTUS Quotes
+  </h1>
+  <table id="productTable">
+   <tr>
+    <th>
+     Produktname
+    </th>
+    <th>
+     First Quote
+    </th>
+    <th>
+     Aktueller Kurs
+    </th>
+    <th>
+     Performance
+    </th>
+   </tr>
+   <tr>
+    <td>
+     MONEY 5
+    </td>
+    <td id="firstQuote_2">
+     274.32
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <tr>
+    <td>
+     SMALL 5 HEDGE
+    </td>
+    <td id="firstQuote_2">
+     -39.64
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <tr>
+    <td>
+     BROKE 5 HEDGE
+    </td>
+    <td id="firstQuote_2">
+     -15,09
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <tr>
+    <td>
+     TRUE DAX
+    </td>
+    <td id="firstQuote_2">
+     99.80
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <tr>
+    <td>
+     BIG 5
+    </td>
+    <td id="firstQuote_2">
+     132
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Produkt 2
+    </td>
+    <td id="firstQuote_2">
+     200
+    </td>
+    <td>
+     <input id="currentQuote_2" type="number"/>
+    </td>
+    <td id="performance_2">
+     -
+    </td>
+   </tr>
+   <!-- Füge hier weitere Zeilen für weitere Produkte hinzu -->
+  </table>
+  <script>
+   // Erhalte eine Referenz auf die Tabelle
+    const table = document.getElementById("productTable");
+
+    // Füge für jede Zeile (außer der Kopfzeile) einen Event Listener hinzu
+    for (let i = 1; i < table.rows.length; i++) {
+      const row = table.rows[i];
+      const firstQuote = parseFloat(row.cells[1].innerText);
+      const currentQuoteInput = row.cells[2].firstElementChild;
+      const performanceCell = row.cells[3];
+
+      currentQuoteInput.addEventListener("input", function() {
+        const currentQuote = parseFloat(this.value);
+        let performance;
+        if (firstQuote >= 0) {
+          performance = ((currentQuote - firstQuote) / Math.abs(firstQuote)) * 100;
+        } else {
+          performance = ((Math.abs(firstQuote) - Math.abs(currentQuote)) / Math.abs(firstQuote)) * 100;
+        }
+        performanceCell.innerText = performance.toFixed(2) + "%";
+      });
+    }
+  </script>
+ </body>
+</html>

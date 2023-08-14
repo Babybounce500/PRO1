@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Positionsgröße von Aktien
+  </title>
+  <script>
+   function calculatePositionSize() {
+      // Werte aus den Eingabefeldern auslesen
+      var kontostand = parseFloat(document.getElementById("kontostand").value.replace(",", "."));
+      var kursrisiko = parseFloat(document.getElementById("kursrisiko").value.replace(",", "."));
+
+      // Positionsgröße (Stückzahl) berechnen
+      var prozentsatz = 1; // 1% des Kontostands
+      var stückzahl = (kontostand * prozentsatz / 100) / kursrisiko;
+
+      // Ergebnis anzeigen
+      document.getElementById("stückzahl").innerHTML = stückzahl;
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+  </style>
+ </head>
+ <body>
+  <h1>
+   Positionsgröße von Aktien
+  </h1>
+  <label for="kontostand">
+   Kontostand:
+  </label>
+  <input id="kontostand" type="text"/>
+  <br/>
+  <label for="kursrisiko">
+   Kursrisiko:
+  </label>
+  <input id="kursrisiko" type="text"/>
+  <br/>
+  <button onclick="calculatePositionSize()">
+   Berechnen
+  </button>
+  <p>
+   Positionsgröße (Stückzahl):
+   <span id="stückzahl">
+   </span>
+  </p>
+ </body>
+</html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Stopp-Bestimmung beim Aktienhandel
+  </title>
+  <style>
+   table {
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+  </style>
+  <script>
+   function determineStops() {
+            var kerzentief = parseFloat(document.getElementById("kerzentief").value);
+            var kerzenhoch = parseFloat(document.getElementById("kerzenhoch").value);
+            
+            var longStop = kerzentief;
+            var shortStop = kerzenhoch;
+            
+            document.getElementById("longStop").textContent = longStop.toFixed(2);
+            document.getElementById("shortStop").textContent = shortStop.toFixed(2);
+        }
+  </script>
+ </head>
+ <body>
+  <h1>
+   Stopp-Bestimmung beim Aktienhandel
+  </h1>
+  <label for="kerzentief">
+   Letztes Kerzentief:
+  </label>
+  <input id="kerzentief" step="0.01" type="number"/>
+  <br/>
+  <label for="kerzenhoch">
+   Letztes Kerzenhoch:
+  </label>
+  <input id="kerzenhoch" step="0.01" type="number"/>
+  <br/>
+  <button onclick="determineStops()">
+   Stopps bestimmen
+  </button>
+  <table>
+   <tr>
+    <th>
+     Position
+    </th>
+    <th>
+     Anfangsstopp
+    </th>
+   </tr>
+   <tr>
+    <td>
+     LONG
+    </td>
+    <td id="longStop">
+    </td>
+   </tr>
+   <tr>
+    <td>
+     SHORT
+    </td>
+    <td id="shortStop">
+    </td>
+   </tr>
+  </table>
+ </body>
+</html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Gewinnmitnahme bei Aktien
+  </title>
+  <script>
+   function calculateNewQuantity() {
+      // Werte aus den Eingabefeldern auslesen
+      var anfangsrisiko = parseFloat(document.getElementById("anfangsrisiko").value.replace(",", "."));
+      var aktuellerKurs = parseFloat(document.getElementById("aktuellerKurs").value.replace(",", "."));
+      var stopp = parseFloat(document.getElementById("stopp").value.replace(",", "."));
+
+      // Neue Stückzahl berechnen
+      var neueStückzahl = anfangsrisiko / (aktuellerKurs - stopp);
+
+      // Ergebnis anzeigen
+      document.getElementById("neueStückzahl").innerHTML = neueStückzahl.toFixed(2);
+    }
+  </script>
+ </head>
+ <body>
+  <h1>
+   Gewinnmitnahme bei Aktien
+  </h1>
+  <label for="anfangsrisiko">
+   Anfangsrisiko (in Euro):
+  </label>
+  <input id="anfangsrisiko" type="text"/>
+  <br/>
+  <label for="aktuellerKurs">
+   Aktueller Kurs:
+  </label>
+  <input id="aktuellerKurs" type="text"/>
+  <br/>
+  <label for="stopp">
+   Stopp:
+  </label>
+  <input id="stopp" type="text"/>
+  <br/>
+  <button onclick="calculateNewQuantity()">
+   Berechnen
+  </button>
+  <p>
+   Neue Stückzahl:
+   <span id="neueStückzahl">
+   </span>
+  </p>
+ </body>
+</html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Zeitstop-Berechnung
+  </title>
+  <style>
+   table {
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+  </style>
+  <script>
+   function calculateTimeStop() {
+            var selectedOption = document.getElementById("kerzenAnzahl").value;
+            var timeStop = "";
+            var daysToAdd = 0;
+
+            switch (selectedOption) {
+                case "1":
+                    timeStop = "nach 1 Kerze";
+                    daysToAdd = 1;
+                    break;
+                case "3":
+                    timeStop = "nach 3 Kerzen";
+                    daysToAdd = 3;
+                    break;
+                case "5":
+                    timeStop = "nach 5 Kerzen";
+                    daysToAdd = 5;
+                    break;
+                default:
+                    timeStop = "Keine Auswahl";
+                    break;
+            }
+
+            var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + daysToAdd);
+            var formattedDate = currentDate.toDateString();
+            
+            document.getElementById("timeStop").textContent = timeStop;
+            document.getElementById("date").textContent = formattedDate;
+        }
+  </script>
+  <h1>
+   Trailing Stop Berechnung
+  </h1>
+  <table id="trailingStopTable">
+   <thead>
+    <tr>
+     <th>
+      Name
+     </th>
+     <th>
+      Entry
+     </th>
+     <th>
+      Initial stop
+     </th>
+     <th>
+      Shares total
+     </th>
+     <th>
+      Shares to cover
+     </th>
+     <th>
+      Result
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <!-- Rows will be added dynamically using JavaScript -->
+   </tbody>
+  </table>
+  <br/>
+  <!-- Input fields for user to enter data -->
+  <label for="name">
+   Name:
+  </label>
+  <input id="name" type="text" value="Beispiel Aktie"/>
+  <br/>
+  <label for="entry">
+   Entry:
+  </label>
+  <input id="entry" type="number" value="100.50"/>
+  <br/>
+  <label for="initialStop">
+   Initial stop:
+  </label>
+  <input id="initialStop" type="number" value="95.00"/>
+  <br/>
+  <label for="sharesTotal">
+   Shares total:
+  </label>
+  <input id="sharesTotal" type="number" value="100"/>
+  <br/>
+  <label for="sharesToCover">
+   Shares to cover:
+  </label>
+  <input id="sharesToCover" type="number" value="20"/>
+  <br/>
+  <label for="resultInput">
+   Result Input:
+  </label>
+  <input id="resultInput" type="number" value="80"/>
+  <br/>
+  <label for="resultField">
+   Result:
+  </label>
+  <input id="resultField" type="number"/>
+  <br/>
+  <button onclick="addTrailingStopEntry()">
+   Eintrag hinzufügen
+  </button>
+  <script>
+   function addTrailingStopEntry() {
+        // Get values from input fields
+        var name = document.getElementById("name").value;
+        var entry = parseFloat(document.getElementById("entry").value);
+        var initialStop = parseFloat(document.getElementById("initialStop").value);
+        var sharesTotal = parseFloat(document.getElementById("sharesTotal").value);
+        var sharesToCover = parseFloat(document.getElementById("sharesToCover").value);
+
+        // Calculate result (in this example, I'll just compute the difference between entry and initial stop)
+        var result = entry - initialStop;
+
+        // Append the new row to the table
+        var table = document.getElementById("trailingStopTable").getElementsByTagName("tbody")[0];
+        var newRow = table.insertRow(table.rows.length);
+
+        newRow.insertCell(0).innerHTML = name;
+        newRow.insertCell(1).innerHTML = entry;
+        newRow.insertCell(2).innerHTML = initialStop;
+        newRow.insertCell(3).innerHTML = sharesTotal;
+        newRow.insertCell(4).innerHTML = sharesToCover;
+        result = parseFloat(document.getElementById("resultInput").value);
+        document.getElementById("resultField").value = result;
+        newRow.insertCell(6).innerHTML = result;
+    }
+  </script>
+  <!DOCTYPE html>
+  <html lang="de">
+   <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>
+     Coin Toss Aktienhandel
+    </title>
+   </head>
+   <body>
+    <h2>
+     Coin Toss Aktienhandel System
+    </h2>
+    <h3>
+     Aktiennamen eingeben:
+    </h3>
+    <form name="coinTossForm">
+     <input id="aktie1" placeholder="Aktienname 1" type="text"/>
+     <br/>
+     <br/>
+     <input id="aktie2" placeholder="Aktienname 2" type="text"/>
+     <br/>
+     <br/>
+     <input id="aktie3" placeholder="Aktienname 3" type="text"/>
+     <br/>
+     <br/>
+     <input id="aktie4" placeholder="Aktienname 4" type="text"/>
+     <br/>
+     <br/>
+     <input id="aktie5" placeholder="Aktienname 5" type="text"/>
+     <br/>
+     <br/>
+     <input onclick="coinTossDecision()" type="button" value="Entscheiden"/>
+    </form>
+    <h3>
+     Entscheidung:
+    </h3>
+    <table border="1">
+     <thead>
+      <tr>
+       <th>
+        Aktienname
+       </th>
+       <th>
+        Trendrichtung
+       </th>
+      </tr>
+     </thead>
+     <tbody id="decisionTable">
+      <!-- Die Entscheidungen werden hier angezeigt -->
+     </tbody>
+    </table>
+    <h3>
+     Einstiegspunkt:
+    </h3>
+    <table border="1">
+     <thead>
+      <tr>
+       <th>
+        Aktienname
+       </th>
+       <th>
+        Trendrichtung
+       </th>
+       <th>
+        Kerzenhoch/Kerzentief
+       </th>
+      </tr>
+     </thead>
+     <tbody id="entryTable">
+      <!-- Hier können Sie die Einstiegspunkte eingeben -->
+     </tbody>
+    </table>
+    <script>
+     function coinTossDecision() {
+        let aktien = [];
+        for (let i = 1; i <= 5; i++) {
+            let aktienname = document.getElementById("aktie" + i).value;
+            if (aktienname.trim() !== "") {
+                aktien.push(aktienname);
+            }
+        }
+
+        if (aktien.length === 0) {
+            alert("Bitte geben Sie mindestens einen Aktiennamen ein.");
+            return;
+        }
+
+        let ausgewaehlteAktie = aktien[Math.floor(Math.random() * aktien.length)];
+        let trendrichtung = Math.random() > 0.5 ? "LONG" : "SHORT";
+
+        // Ergebnisse in der Tabelle anzeigen
+        let tbody = document.getElementById("decisionTable");
+        tbody.innerHTML = `<tr><td>${ausgewaehlteAktie}</td><td>${trendrichtung}</td></tr>`;
+
+        // Eingabefeld für Einstiegspunkt hinzufügen
+        let einstiegTbody = document.getElementById("entryTable");
+        let einstiegTyp = trendrichtung === "LONG" ? "Kerzenhoch" : "Kerzentief";
+        einstiegTbody.innerHTML = `<tr><td>${ausgewaehlteAktie}</td><td>${trendrichtung}</td><td><input type="text" placeholder="${einstiegTyp}"></td></tr>`;
+    }
+    </script>
+   </body>
+  </html>
+ </head>
+</html>

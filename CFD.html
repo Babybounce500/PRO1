@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   CFD Berechnung
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+  </style>
+ </head>
+ <body>
+  <h1>
+   CFD Handel
+  </h1>
+  <p>
+   Geben Sie den Basiswert und die Stückzahl ein, um den CFD-Preis und die Margin zu berechnen.
+  </p>
+  <div>
+   <label for="basePrice">
+    Basiswert (Euro):
+   </label>
+   <input id="basePrice" step="0.01" type="number" value="100"/>
+  </div>
+  <div>
+   <label for="quantity">
+    Stückzahl:
+   </label>
+   <input id="quantity" step="1" type="number" value="10"/>
+  </div>
+  <button onclick="calculateCfd()">
+   CFD und Margin berechnen
+  </button>
+  <p id="bidPrice">
+   -
+  </p>
+  <p id="askPrice">
+   -
+  </p>
+  <p id="cfdPrice">
+   -
+  </p>
+  <p id="margin">
+   -
+  </p>
+  <script>
+   function calculateCfd() {
+            const spreadPercent = 0.05;
+            const marginRequirement = 0.1;
+            const basePrice = parseFloat(document.getElementById("basePrice").value);
+            const quantity = parseFloat(document.getElementById("quantity").value);
+
+            const spread = basePrice * spreadPercent;
+            const bidPrice = basePrice - spread / 2;
+            const askPrice = basePrice + spread / 2;
+
+            const cfdPrice = (bidPrice + askPrice) / 2;
+            const margin = cfdPrice * quantity * marginRequirement;
+
+            document.getElementById("bidPrice").innerText = "Geldkurs (Bid): " + bidPrice.toFixed(2) + " Euro";
+            document.getElementById("askPrice").innerText = "Briefkurs (Ask): " + askPrice.toFixed(2) + " Euro";
+            document.getElementById("cfdPrice").innerText = "CFD-Preis: " + cfdPrice.toFixed(2) + " Euro";
+            document.getElementById("margin").innerText = "Margin: " + margin.toFixed(2) + " Euro";
+        }
+  </script>
+ </body>
+</html>

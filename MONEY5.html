@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Fondspreis Berechnung
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+  </style>
+ </head>
+ <body>
+  <h1>
+   MONEY 5 Fonds
+  </h1>
+  <p>
+   Der Fondspreis wird berechnet aus der Addition aller 5 Kurswerte geteilt durch die Anzahl 5.
+  </p>
+  <button onclick="berechneFondsPreis()">
+   Fondspreis berechnen
+  </button>
+  <p id="fondsPreis">
+   -
+  </p>
+  <p id="aktuellesDatum">
+   -
+  </p>
+  <table>
+   <tr>
+    <th>
+     Aktienname
+    </th>
+    <th>
+     Aktueller Kurs (Euro)
+    </th>
+   </tr>
+   <tr>
+    <td>
+     MunichRe
+    </td>
+    <td>
+     <input id="kursMunichRe" step="0.01" type="number" value="150"/>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Sartorius
+    </td>
+    <td>
+     <input id="kursSartorius" step="0.01" type="number" value="200"/>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     Rheinmetall
+    </td>
+    <td>
+     <input id="kursRheinmetall" step="0.01" type="number" value="90"/>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     HannoverRueck
+    </td>
+    <td>
+     <input id="kursHannoverRueck" step="0.01" type="number" value="130"/>
+    </td>
+   </tr>
+   <tr>
+    <td>
+     MTU
+    </td>
+    <td>
+     <input id="kursMTU" step="0.01" type="number" value="250"/>
+    </td>
+   </tr>
+  </table>
+  <script>
+   function berechneFondsPreis() {
+            const gewichtungen = [0.2, 0.2, 0.2, 0.2, 0.2];
+            const kursMunichRe = parseFloat(document.getElementById("kursMunichRe").value);
+            const kursSartorius = parseFloat(document.getElementById("kursSartorius").value);
+            const kursRheinmetall = parseFloat(document.getElementById("kursRheinmetall").value);
+            const kursHannoverRueck = parseFloat(document.getElementById("kursHannoverRueck").value);
+            const kursMTU = parseFloat(document.getElementById("kursMTU").value);
+
+            const kurswerte = [kursMunichRe, kursSartorius, kursRheinmetall, kursHannoverRueck, kursMTU];
+            const fondsVolumen = 100000; // in Euro
+            const fondsPreis = (kurswerte.reduce((sum, kurs, index) => sum + (kurs * gewichtungen[index]), 0)) / gewichtungen.reduce((sum, gewicht) => sum + gewicht, 0);
+
+            document.getElementById("fondsPreis").innerText = "Fondspreis: " + fondsPreis.toFixed(2) + " Euro";
+        }
+
+        // Funktion zum Anzeigen des aktuellen Datums
+        function zeigeAktuellesDatum() {
+            const now = new Date();
+            const datumString = now.toLocaleDateString("de-DE");
+            document.getElementById("aktuellesDatum").innerText = "Aktuelles Datum: " + datumString;
+        }
+
+        // Aufruf der Funktion, um das aktuelle Datum zu setzen
+        zeigeAktuellesDatum();
+  </script>
+ </body>
+</html>
