@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Kunst Galerie</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #imageContainer {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="imageContainer">
+        <img id="currentImage" src="https://babybounce500.github.io/C/1.jpg" alt="AI Kunstwerk">
+    </div>
+    <script>
+        
+const images = [
+    "https://babybounce500.github.io/C/1.jpg",
+    "https://babybounce500.github.io/C/2.jpg",
+    "https://babybounce500.github.io/C/3.jpg",
+            "https://babybounce500.github.io/C/4.jpg",
+            "https://babybounce500.github.io/C/5.jpg",
+            "https://babybounce500.github.io/C/6.jpg",
+            "https://babybounce500.github.io/C/7.jpg",
+            "https://babybounce500.github.io/C/8.jpg",
+            "https://babybounce500.github.io/C/9.jpg",
+            "https://babybounce500.github.io/C/10.jpg",
+            "https://babybounce500.github.io/C/11.jpg",
+            "https://babybounce500.github.io/C/12.jpg",
+            "https://babybounce500.github.io/C/13.jpg",
+            "https://babybounce500.github.io/C/14.jpg",
+            "https://babybounce500.github.io/C/15.jpg",
+            "https://babybounce500.github.io/C/16.jpg",
+            "https://babybounce500.github.io/C/17.jpg",
+            "https://babybounce500.github.io/C/18.jpg",
+            "https://babybounce500.github.io/C/19.jpg",
+            "https://babybounce500.github.io/C/20.jpg",
+            "https://babybounce500.github.io/C/21.jpg",
+            "https://babybounce500.github.io/C/22.jpg",
+            "https://babybounce500.github.io/C/23.jpg",
+            "https://babybounce500.github.io/C/24.jpg",
+            "https://babybounce500.github.io/C/25.jpg",
+            "https://babybounce500.github.io/C/26.jpg",
+            "https://babybounce500.github.io/C/27.jpg",
+            "https://babybounce500.github.io/C/28.jpg",
+            "https://babybounce500.github.io/C/29.jpg",
+            "https://babybounce500.github.io/C/30.jpg",
+            "https://babybounce500.github.io/C/31.jpg",
+            "https://babybounce500.github.io/C/39.jpg",
+            "https://babybounce500.github.io/C/38.jpg",
+            "https://babybounce500.github.io/C/37.jpg",
+            "https://babybounce500.github.io/C/36.jpg",
+            "https://babybounce500.github.io/C/35.jpg",
+            "https://babybounce500.github.io/C/34.jpg",
+            "https://babybounce500.github.io/C/32.jpg",
+            "https://babybounce500.github.io/C/33.jpg",
+            "https://babybounce500.github.io/C/40.jpg",
+    // ... (rest of the image URLs will remain as they are)
+];
+
+let currentIndex = 0;
+const imageElement = document.getElementById("currentImage");
+
+function changeImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    imageElement.src = images[currentIndex];
+}
+
+setInterval(changeImage, 3000);  // Change the image every 3 seconds
+
+    </script>
+</body>
+</html>
