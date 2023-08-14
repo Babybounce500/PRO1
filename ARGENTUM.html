@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   IntermarketSpread
+  </title>
+  <script>
+   function analyseSpreads() {
+      // Get the input values
+      var indexA = parseFloat(document.getElementById('indexA').value);
+      var stockB = parseFloat(document.getElementById('stockB').value);
+      var indexC = parseFloat(document.getElementById('indexC').value);
+      var stockD = parseFloat(document.getElementById('stockD').value);
+
+      // Calculate the spreads
+      var spreadA = indexA / stockB;
+      var spreadB = indexC / stockD;
+
+      // Compare the spreads and display the result
+      var result = '';
+      if (spreadB < spreadA) {
+        result = 'Short Signal';
+      } else if (spreadB > spreadA) {
+        result = 'Long Signal';
+      } else {
+        result = 'No Signal';
+      }
+
+      // Display the result
+      document.getElementById('result').innerHTML = result;
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+  </style>
+ </head>
+ <body>
+  <h1>
+   ARGENTUM Intermarket Spreads
+  </h1>
+  <h1>
+   INDEX : STOCK SPREAD
+  </h1>
+  <form>
+   <label for="indexA">
+    Kurs A des Index:
+   </label>
+   <input id="indexA" step="0.01" type="number"/>
+   <br/>
+   <label for="stockB">
+    Kurs B der Aktie:
+   </label>
+   <input id="stockB" step="0.01" type="number"/>
+   <br/>
+   <label for="indexC">
+    Kurs C des Index:
+   </label>
+   <input id="indexC" step="0.01" type="number"/>
+   <br/>
+   <label for="stockD">
+    Kurs D der Aktie:
+   </label>
+   <input id="stockD" step="0.01" type="number"/>
+   <br/>
+   <button onclick="analyseSpreads()" type="button">
+    Analysieren
+   </button>
+  </form>
+  <h2>
+   Ergebnis:
+  </h2>
+  <p id="result">
+  </p>
+ </body>
+</html>
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Erklärungs-Container
+  </title>
+  <style>
+   .container {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+  </style>
+ </head>
+ <body>
+  <h1>
+   Explaination
+  </h1>
+  <div class="container">
+   <p>
+    Kurs A entspricht dem letzten Close des Index.
+    <br/>
+    Kurs B entspricht dem letzten Close der Aktie.
+    <br/>
+    Kurs C entspricht dem drittletzten Close des Index
+    <br/>
+    Kurs D entspricht dem drittletzten Close der Aktie
+   </p>
+   <p>
+    Weitere Textabschnitte können hier ergänzt werden.
+   </p>
+  </div>
+ </body>
+</html>
