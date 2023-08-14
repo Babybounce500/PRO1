@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOMVS AVREA - Finanzdienstleister</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+        nav div {
+            margin: 0 10px;
+        }
+        nav a, nav select, .dropdown_label {
+            display: block;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        nav a:hover, nav select:hover, .dropdown_label:hover {
+            background-color: #ddd;
+        }
+        /* Styles für die COMMERCIUM Unterseite */
+        #commerciumSubpage {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #commerciumSubpage a {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DOMVS AVREA</h1>
+        <p>Finanzdienstleister</p>
+    </header>
+
+    <nav>
+        <div><a href="#" onclick="showCommerciumSubpage()">COMMERCIUM</a></div>
+        <!-- Weitere Navigationselemente können hier hinzugefügt werden -->
+    </nav>
+
+    <!-- Unterseite für COMMERCIUM -->
+    <div id="commerciumSubpage">
+        <a href="https://Babybounce500.github.io/PRO1/XETRA1.html">COMMERCIUM Xetrastyle</a>
+        <a href="https://Babybounce500.github.io/PRO1/NFT1.html"">COMMERCIUM NFT Auktion Highest Bid</a>
+        <a href="https://Babybounce500.github.io/PRO1/NFT2.html"">NFT Auktion Orderbuch</a>
+        <a href="https://Babybounce500.github.io/1a/MARKETMAKER.html"">COMMERCIUM Market Maker</a>
+        <a href="https://Babybounce500.github.io/1a/LIQUID.html"">COMERCIUM Liquidity</a>
+    </div>
+
+    <script>
+        function showCommerciumSubpage() {
+            const subpage = document.getElementById('commerciumSubpage');
+            subpage.style.display = subpage.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
