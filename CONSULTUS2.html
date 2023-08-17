@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Anfrage für Aktienkurse</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        label, input, button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>CONSULTUS API</h1>
+<label for="stockSymbol">Aktienkürzel:</label>
+<input id="stockSymbol" type="text" placeholder="z.B. AAPL.US">
+<label for="datePicker">Datum:</label>
+<input id="datePicker" type="date">
+<button onclick="performApiRequest()">API Anfrage</button>
+
+
+<table border="1" id="stockData">
+    
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Datum</th>
+            <th>Close</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!-- Rows will be added here dynamically using JavaScript after the API call -->
+    </tbody>
+</table>
+<script>
+    function performApiRequest() {
+        const stockSymbol = document.getElementById('stockSymbol').value.toUpperCase();
+        const selectedDate = document.getElementById('datePicker').value;
+        
+        // You can add more logic here if needed, for now, it just fetches based on the stock symbol and date
+        const apiUrl = `https://eodhistoricaldata.com/api/eod/${stockSymbol}?api_token=64d7d0670ee1f8.90133693&fmt=json&from=${selectedDate}&to=${selectedDate}`;
+        
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        
+        const nameCell = document.createElement('td');
+        nameCell.textContent = stockSymbol;
+        row.appendChild(nameCell);
+const dateCell = document.createElement('td');
+        dateCell.textContent = item.date;
+        const closeCell = document.createElement('td');
+        closeCell.textContent = item.close;
+        row.appendChild(dateCell);
+        row.appendChild(closeCell);
+        document.getElementById('stockData').querySelector('tbody').appendChild(row);
+    });
+// Handle the fetched data here
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('There was an error fetching the data:', error);
+        });
+    }
+</script>
+
+</body>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aktienkurs Analyse und Positionsgröße</title>
+  <script>
+    function getRandomKurs() {
+      // Generiere eine zufällige Kurszahl zwischen 50 und 200
+      return (Math.random() * (200 - 50) + 50).toFixed(2);
+    }
+
+    function analyzeStocks() {
+      // Werte aus den Eingabefeldern für die Aktienanalyse auslesen
+      var aktienname = document.getElementById("aktienname").value;
+      var kursA = parseFloat(document.getElementById("kursA").value);
+      var kursB = parseFloat(document.getElementById("kursB").value);
+      var kursC = parseFloat(document.getElementById("kursC").value);
+      var dauer = document.getElementById("dauer").value;
+
+      // Börsenanalyse durchführen
+      var diffAB = Math.abs(kursA - kursB); // Absolute Differenz von A und B
+      var diffCB = Math.abs(kursC - kursB); // Absolute Differenz von C und B
+
+      // Ergebnis anzeigen
+      var result;
+      if (diffAB < diffCB) {
+        result = "GO";
+      } else {
+        result = "NO";
+      }
+      document.getElementById("result").innerHTML = result;
+
+      // Tabelle aktualisieren
+      if (result === "GO") {
+        var ergebnisTable = document.getElementById("ergebnisTable");
+        var newRow = ergebnisTable.insertRow(-1);
+        var aktiennameCell = newRow.insertCell(0);
+        var longCell = newRow.insertCell(1);
+        var shortCell = newRow.insertCell(2);
+        var kursrisikoCell = newRow.insertCell(3);
+        var stückzahlCell = newRow.insertCell(4);
+        var terminCell = newRow.insertCell(5);
+
+        aktiennameCell.innerHTML = aktienname;
+        longCell.innerHTML = Math.max(kursA, kursB, kursC);
+        shortCell.innerHTML = Math.min(kursA, kursB, kursC);
+        kursrisikoCell.innerHTML = (parseFloat(longCell.innerHTML) - parseFloat(shortCell.innerHTML)).toFixed(2);
+        
+        // Setze den Termin basierend auf der ausgewählten Dauer
+        var currentDate = new Date();
+        if (dauer === "3 Tage") {
+          currentDate.setDate(currentDate.getDate() + 3);
+        } else if (dauer === "3 Wochen") {
+          currentDate.setDate(currentDate.getDate() + 21);
+        } else if (dauer === "3 Monate") {
+          currentDate.setMonth(currentDate.getMonth() + 3);
+        }
+        terminCell.innerHTML = currentDate.toISOString().slice(0, 10); // Zeige das Datum im Format JJJJ-MM-TT an
+
+        // Markiere die Spalte "Stückzahl" als offen, um die Positionsgröße später zu berechnen
+        stückzahlCell.setAttribute("data-open", "true");
+      }
+
+      // Textfelder zurücksetzen
+      document.getElementById("aktienname").value = "";
+      document.getElementById("kursA").value = "";
+      document.getElementById("kursB").value = "";
+      document.getElementById("kursC").value = "";
+      document.getElementById("dauer").value = "3 Tage"; // Setze die Auswahl zurück auf "3 Tage"
+    }
+
+    function calculatePositionSize() {
+      // Werte aus den Eingabefeldern für die Positionsgrößenberechnung auslesen
+      var kontostand = parseFloat(document.getElementById("kontostand").value.replace(",", "."));
+      var kursrisiko = parseFloat(document.getElementById("kursrisiko").value.replace(",", "."));
+
+      // Positionsgröße (Stückzahl) berechnen und auf die nächste kleinere ganze Zahl abrunden
+      var prozentsatz = 1; // 1% des Kontostands
+      var stückzahl = Math.floor((kontostand * prozentsatz / 100) / kursrisiko);
+
+      // Ergebnis anzeigen
+      document.getElementById("stückzahl").innerHTML = stückzahl;
+      document.getElementById("aktuellKontostand").innerHTML = kontostand.toFixed(2);
+
+      // Aktualisiere die Zelle in der Tabelle bei "Stückzahl", wenn die Spalte als offen markiert ist
+      var stückzahlCell = document.querySelector("[data-open='true']");
+      if (stückzahlCell) {
+        stückzahlCell.innerHTML = stückzahl;
+        stückzahlCell.removeAttribute("data-open");
+      }
+    }
+  </script>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        label, input, button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style></head>
+<body>
+  <h1>CONSULTUS Analyse</h1>
+ <p>Kurs A = letzter Close / Kurs B = vorletzter Close / Kurs C = drittletzter Close</p>
+  <p>Wenn Dauer 3 Tage, dann Tagesschlusskurse verwenden. Wenn Dauer 3Wochen, dann Wochenschlusskurs verwenden, Wenn Dauer 3 Monate, dann Wochenschlusskurs verwenden</p>
+  <label for="aktienname">Aktienname:</label>
+  <input type="text" id="aktienname" name="aktienname"><br>
+
+  <label for="kursA">Kurs A:</label>
+  <input type="number" step="0.01" id="kursA"><br>
+
+  <label for="kursB">Kurs B:</label>
+  <input type="number" step="0.01" id="kursB"><br>
+
+  <label for="kursC">Kurs C:</label>
+  <input type="number" step="0.01" id="kursC"><br>
+  
+  <label for="dauer">Dauer:</label>
+  <select id="dauer">
+    <option value="3 Tage">3 Tage</option>
+    <option value="3 Wochen">3 Wochen</option>
+    <option value="3 Monate">3 Monate</option>
+  </select><br>
+
+  <button onclick="analyzeStocks()">Aktienanalyse durchführen</button>
+
+  <p>Ergebnis: <span id="result"></span></p>
+
+  <table id="ergebnisTable">
+    <tr>
+      <th>Aktienname</th>
+      <th>LONG</th>
+      <th>SHORT</th>
+      <th>Kursrisiko</th>
+      <th>Stückzahl</th>
+      <th>Termin</th>
+    </tr>
+  </table>
+
+  <h2>POSITIONSGRÖSSE</h2>
+  <label for="kontostand">Kontostand:</label>
+  <input type="text" id="kontostand"><br>
+
+  <label for="kursrisiko">Kursrisiko:</label>
+  <input type="text" id="kursrisiko"><br>
+
+  <button onclick="calculatePositionSize()">Positionsgröße berechnen</button>
+
+  <p>Aktueller Kontostand: <span id="aktuellKontostand"></span></p>
+  <p>
+    <p>Positionsgröße (Stückzahl): <span id="stückzahl"></span></p>
+  </body>
+  </html>
+  <!DOCTYPE html>
+<html>
+<head>
+    <title>CONSULTING Gewinnmitnahme </title>
+</head>
+<body>
+    <h1>GEWINNMITNAHME</h1>
+    <form id="stockForm">
+        <label for="stockName">Aktienname:</label>
+        <input type="text" id="stockName" required><br>
+
+        <label for="currentPrice">Aktueller Kurs:</label>
+        <input type="number" step="0.01" id="currentPrice" required><br>
+
+        <label for="entryPrice">Einstiegskurs:</label>
+        <input type="number" step="0.01" id="entryPrice" required><br>
+
+        <label for="accountBalance">Kontostand:</label>
+        <input type="number" step="0.01" id="accountBalance" required><br>
+
+        <input type="button" value="Berechnen" onclick="calculate()"><br>
+
+        <label for="riskUnit">1R:</label>
+        <span id="riskUnitResult"></span><br>
+
+        <label for="newQuantity">Neue Stückzahl:</label>
+        <span id="newQuantityResult"></span><br>
+    </form>
+
+    <script>
+        function calculate() {
+            const currentPrice = parseFloat(document.getElementById("currentPrice").value);
+            const entryPrice = parseFloat(document.getElementById("entryPrice").value);
+            const accountBalance = parseFloat(document.getElementById("accountBalance").value);
+
+            // Berechnung 1R (1% des Kontostands)
+            const onePercentOfBalance = 0.01 * accountBalance;
+            document.getElementById("riskUnitResult").innerText = onePercentOfBalance.toFixed(2) + " EUR";
+
+            // Berechnung der neuen Stückzahl
+            const riskAmount = onePercentOfBalance / (currentPrice - entryPrice);
+            document.getElementById("newQuantityResult").innerText = Math.floor(riskAmount) + " Stück";
+        }
+    </script>
+</body>
+</html>
+
+
+<html>
+<body>
+    <h1>CORPUS SLAM Gewinnmitnahme</h1><br><p>Zeitraum A = letzte Kerze / Zeitraum B = vorletzte Kerze</p>
+    <table>
+<thead>
+<tr>
+<th>Zeitraum</th>
+<th>Low</th>
+<th>Opening</th>
+<th>Closing</th>
+<th>High</th>
+</tr>
+</thead>
+<tbody id="candlestick_data_table">
+<tr>
+<td>A</td>
+<td><input class="low" type="number" value="95"/></td>
+<td><input class="opening" type="number" value="100"/></td>
+<td><input class="closing" type="number" value="90"/></td>
+<td><input class="high" type="number" value="105"/></td>
+</tr>
+<tr>
+<td>B</td>
+<td><input class="low" type="number" value="80"/></td>
+<td><input class="opening" type="number" value="90"/></td>
+<td><input class="closing" type="number" value="85"/></td>
+<td><input class="high" type="number" value="95"/></td>
+</tr>
+</tbody>
+</table>
+    <div>
+<button id="calculateButton">Berechnen</button>
+<p id="coverStatus"></p>
+</div>
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function() {
+    const rows = document.querySelectorAll('#candlestick_data_table tr');
+    const coverStatus = document.getElementById('coverStatus');
+
+    const closingA = parseFloat(rows[0].querySelector('.closing').value);
+    let openingB = parseFloat(rows[1].querySelector('.opening').value);
+    let closingB = parseFloat(rows[1].querySelector('.closing').value);
+
+    // Ensure that openingB is the smaller value and closingB is the larger value
+    if (openingB > closingB) {
+        [openingB, closingB] = [closingB, openingB];
+    }
+
+    if (openingB <= closingA && closingA <= closingB) {
+        coverStatus.innerText = "NO COVER";
+    } else {
+        coverStatus.innerText = "COVER";
+    }
+});
+    </script>
+</body>
+
+</html>
