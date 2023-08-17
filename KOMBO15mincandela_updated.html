@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Echtzeitkurse abrufen</title>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+
+body { text-align: left; }</style></head>
+<body>
+<h1>Echtzeitkurse abrufen</h1>
+<label for="ticker">Tickersymbol:</label>
+<input id="ticker" placeholder="z.B. AAPL.US" type="text"/>
+<button onclick="getRealTimePrice()">Kurs abrufen</button>
+<table border="1">
+<tr>
+<th>Attribute</th>
+<th>Wert</th>
+</tr>
+<tr>
+<td>Aktiencode</td>
+<td id="code">AAPL.US</td>
+</tr>
+<tr>
+<td>Datum und Uhrzeit</td>
+<td id="date">2023-08-15 20:00:00</td>
+</tr>
+<tr>
+<td>GMT-Offset</td>
+<td id="gmtOffset">0</td>
+</tr>
+<tr>
+<td>Eröffnungspreis</td>
+<td id="openingPrice">178.88$</td>
+</tr>
+<tr>
+<td>Höchstpreis</td>
+<td id="highestPrice">179.48$</td>
+</tr>
+<tr>
+<td>Tiefstpreis</td>
+<td id="lowestPrice">177.05$</td>
+</tr>
+<tr>
+<td>Letzter verfügbarer Kurs</td>
+<td id="lastAvailablePrice">177.45$</td>
+</tr>
+<tr>
+<td>Handelsvolumen</td>
+<td id="tradeVolume">43332082</td>
+</tr>
+<tr>
+<td>Letzter verfügbarer Kurs des vorherigen Tages</td>
+<td id="previousDayPrice">179.46$</td>
+</tr>
+<tr>
+<td>Preisänderung</td>
+<td id="priceChange">-2.01$</td>
+</tr>
+<tr>
+<td>Prozentuale Preisänderung</td>
+<td id="percentageChange">-1.12%</td>
+</tr>
+</table>
+<pre id="price"></pre>
+<script>
+    function getRealTimePrice() {
+        const ticker = document.getElementById('ticker').value;
+        const apiKey = '64d7d0670ee1f8.90133693'; // Ihr API-Schlüssel hier
+
+        fetch(`https://eodhistoricaldata.com/api/real-time/${ticker}?fmt=json&api_token=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('code').innerText = data.code;
+
+            // Umwandlung des Unix-Zeitstempels in ein normales Datum und Uhrzeitformat
+            const date = new Date(data.date * 1000);
+            const formattedDate = date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE');
+            document.getElementById('date').innerText = formattedDate;
+
+            // Hier können Sie den Code hinzufügen, um die anderen Datenpunkte aus der API zu aktualisieren
+            // Zum Beispiel:
+            document.getElementById('openingPrice').innerText = data.open ;
+            document.getElementById('highestPrice').innerText = data.high;
+            document.getElementById('lowestPrice').innerText = data.low;
+            document.getElementById('lastAvailablePrice').innerText = data.close;
+            document.getElementById('tradeVolume').innerText = data.volume;
+            document.getElementById('previousDayPrice').innerText = data.previousClose; // Angenommen, es gibt ein previousClose-Feld in den Daten
+document.getElementById('priceChange').innerText = (data.close - data.previousClose).toFixed(2) ; // Beispielberechnung
+document.getElementById('percentageChange').innerText = (((data.close - data.previousClose) / data.previousClose) * 100).toFixed(2) + "%"; // Beispielberechnung
+            // ... und so weiter für die anderen Datenpunkte
+
+            const formattedData = JSON.stringify(data, null, 2);
+            document.getElementById('price').innerText = formattedData;
+        })
+        .catch(error => {
+            console.error("Es gab einen Fehler beim Abrufen der Daten:", error);
+        });
+    }
+</script>
+</body>
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unix-Zeitstempel Konverter</title>
+</head>
+<body>
+<h1>Unix-Zeitstempel umwandeln</h1>
+<label for="timestampInput">Geben Sie den Unix-Zeitstempel ein:</label>
+<input id="timestampInput" placeholder="z.B. 1692190440" type="text"/>
+<button onclick="convertAndDisplay()">Umwandeln</button>
+<p id="result"></p>
+<script>
+function convertTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE');
+}
+
+function convertAndDisplay() {
+    const timestamp = parseInt(document.getElementById('timestampInput').value);
+    if (!isNaN(timestamp)) {
+        const result = convertTimestamp(timestamp);
+        document.getElementById('result').innerText = "Zeit: " + result;
+    } else {
+        document.getElementById('result').innerText = "Bitte geben Sie einen gültigen Unix-Zeitstempel ein.";
+    }
+}
+</script>
+</body>
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Candlestick Chart Erstellung</title>
+<div class="container">
+<h2>Candlestick Chart Eingabe</h2>
+<table border="1">
+<thead>
+<tr>
+<th></th>
+<th>Candlestick 1</th>
+<th>Candlestick 2</th>
+<th>Candlestick 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HIGH</td>
+<td><input id="high1" name="high1" type="number" value="140"/></td>
+<td><input id="high2" name="high2" type="number" value="150"/></td>
+<td><input id="high3" name="high3" type="number" value="160"/></td>
+</tr>
+<tr>
+<td>LOW</td>
+<td><input id="low1" name="low1" type="number" value="100"/></td>
+<td><input id="low2" name="low2" type="number" value="110"/></td>
+<td><input id="low3" name="low3" type="number" value="120"/></td>
+</tr>
+<tr>
+<td>OPEN</td>
+<td><input id="open1" name="open1" type="number" value="110"/></td>
+<td><input id="open2" name="open2" type="number" value="120"/></td>
+<td><input id="open3" name="open3" type="number" value="130"/></td>
+</tr>
+<tr>
+<td>CLOSE</td>
+<td><input id="close1" name="close1" type="number" value="130"/></td>
+<td><input id="close2" name="close2" type="number" value="140"/></td>
+<td><input id="close3" name="close3" type="number" value="150"/></td>
+</tr>
+</tbody>
+</table>
+<br/>
+<input onclick="drawChart()" type="button" value="Diagramm aktualisieren"/>
+</div>
+<script src="https://www.gstatic.com/charts/loader.js" type="text/javascript"></script>
+<script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+
+        function drawChart() {
+            // Candlestick 1
+            let low1 = parseFloat(document.getElementById("low1").value) || 100;
+            let high1 = parseFloat(document.getElementById("high1").value) || 120;
+            let open1 = parseFloat(document.getElementById("open1").value) || 105;
+            let close1 = parseFloat(document.getElementById("close1").value) || 115;
+
+            // Candlestick 2
+            let low2 = parseFloat(document.getElementById("low2").value) || 110;
+            let high2 = parseFloat(document.getElementById("high2").value) || 130;
+            let open2 = parseFloat(document.getElementById("open2").value) || 115;
+            let close2 = parseFloat(document.getElementById("close2").value) || 125;
+
+            // Candlestick 3
+            let low3 = parseFloat(document.getElementById("low3").value) || 120;
+            let high3 = parseFloat(document.getElementById("high3").value) || 140;
+            let open3 = parseFloat(document.getElementById("open3").value) || 125;
+            let close3 = parseFloat(document.getElementById("close3").value) || 135;
+
+            let data = google.visualization.arrayToDataTable([
+                ['Zeitraum', 'Low', 'Opening', 'Closing', 'High'],
+                ['Candlestick 1', low1, open1, close1, high1],
+                ['Candlestick 2', low2, open2, close2, high2],
+                ['Candlestick 3', low3, open3, close3, high3]
+            ]);
+
+            let options = {
+                legend: 'none',
+                candlestick: {
+                    fallingColor: { strokeWidth: 0, fill: '#a52714' },
+                    risingColor: { strokeWidth: 0, fill: '#0f9d58' }
+                },
+                bar: { groupWidth: '25%' } // Reducing the width of the candlesticks
+            };
+
+            let chart = new google.visualization.CandlestickChart(document.getElementById('candlestick_chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</meta></meta></head>
+<body onload="drawChart()">
+<h2>Candlestick Chart:</h2>
+<div id="candlestick_chart_div" style="width: 600px; height: 400px;"></div>
+</body>
+</html>
+</html></html>

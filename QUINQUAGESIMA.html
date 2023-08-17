@@ -1,0 +1,106 @@
+<html><head><style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+
+body { text-align: left; }</style></head>
+<script>  function calculatePositionSize() {
+    // Werte aus den Eingabefeldern auslesen
+    var kontostand = parseFloat(document.getElementById("kontostand").value.replace(",", "."));
+    var kursrisiko = parseFloat(document.getElementById("kursrisiko").value.replace(",", "."));
+
+    // Positionsgröße (Stückzahl) berechnen
+    var prozentsatz = 1; // 1% des Kontostands
+    var stückzahl = (kontostand * prozentsatz / 100) / kursrisiko;
+
+    // Ergebnis anzeigen
+    document.getElementById("stückzahl").innerHTML = stückzahl;
+  }
+  </script>
+<br/>
+<script>
+function analyse() {
+
+    var aktiename = document.getElementById("aktiename").value;
+    document.getElementById("aktienameTd").textContent = aktiename;
+
+    var kursspanneA = parseFloat(document.getElementById("kursspanneA").value);
+    var kursA = parseFloat(document.getElementById("kursA").value);
+    
+    var shortValue = kursA - kursspanneA / 2;
+    var longValue = kursA + kursspanneA / 2;
+
+    document.getElementById("kursspanneATd").textContent = kursspanneA.toFixed(2);
+    document.getElementById("kursATd").textContent = kursA.toFixed(2);
+    document.getElementById("trendTd").textContent = shortValue.toFixed(2) + " € SHORT, " + longValue.toFixed(2) + " € LONG";
+    
+    // Formular zurücksetzen
+    document.getElementById("aktiename").value = "";
+    document.getElementById("kursspanneA").value = "";
+    document.getElementById("kursA").value = "";
+    
+    // Ergebnistabelle anzeigen
+    document.getElementById("ergebnisTabelle").style.display = "table";
+}
+</script>
+<table id="ergebnisTabelle" style="display: none;">
+<tr>
+<th>Aktiename</th>
+<th>Kursspanne A</th>
+<th>Kurs A</th>
+<th>Trend</th>
+</tr>
+<tr>
+<td id="aktienameTd"></td>
+<td id="kursspanneATd"></td>
+<td id="kursATd"></td>
+<td id="trendTd"></td>
+</tr>
+</table>
+<form>
+        Aktiename: <input id="aktiename" type="text"/><br/>
+        Kursspanne A: <input id="kursspanneA" step="0.01" type="number"/><br/>
+        Kurs A: <input id="kursA" step="0.01" type="number"/><br/>
+<button onclick="analyse()" type="button">Analyse durchführen</button>
+</form>
+<p>Kurspanne A = letztes High - Low /  Kurs A = letzter Close / </p></html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rendite-Rechner</title>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+
+body { text-align: left; }</style></head>
+<body>
+<h1>Rendite-Rechner</h1>
+<p>Geben Sie Ihre kurzfristige Rendite und die Anzahl der Tage ein, um die jährliche Rendite zu berechnen:</p>
+<label for="rendite">Kurzfristige Rendite (z.B. 3 für 3%):</label>
+<input id="rendite" step="0.01" type="number"/>
+<br/>
+<label for="tage">Anzahl der Tage (z.B. 3 für 3 Tage):</label>
+<input id="tage" step="1" type="number"/>
+<br/><br/>
+<button onclick="berechneJahrlicheRendite()">Berechnen</button>
+<br/><br/>
+<p>Jährliche Rendite: <span id="jahresrendite">0</span>% p.a.</p>
+<script>
+        function berechneJahrlicheRendite() {
+            let rendite = parseFloat(document.getElementById("rendite").value);
+            let tage = parseInt(document.getElementById("tage").value);
+            let jahresrendite = (rendite / tage) * 365;
+            document.getElementById("jahresrendite").innerText = jahresrendite.toFixed(2);
+        }
+    </script>
+</body>
+</html>

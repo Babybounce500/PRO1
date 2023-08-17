@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Echtzeitkurse abrufen</title>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+
+body { text-align: left; }</style></head>
+<body>
+<h1>Echtzeitkurse abrufen</h1>
+<label for="ticker">Tickersymbol:</label>
+<input id="ticker" placeholder="z.B. AAPL.US" type="text"/>
+<button onclick="getRealTimePrice()">Kurs abrufen</button>
+<table border="1">
+<tr>
+<th>Attribute</th>
+<th>Wert</th>
+</tr>
+<tr>
+<td>Aktiencode</td>
+<td id="code">AAPL.US</td>
+</tr>
+<tr>
+<td>Datum und Uhrzeit</td>
+<td id="date">2023-08-15 20:00:00</td>
+</tr>
+<tr>
+<td>GMT-Offset</td>
+<td id="gmtOffset">0</td>
+</tr>
+<tr>
+<td>Eröffnungspreis</td>
+<td id="openingPrice">178.88$</td>
+</tr>
+<tr>
+<td>Höchstpreis</td>
+<td id="highestPrice">179.48$</td>
+</tr>
+<tr>
+<td>Tiefstpreis</td>
+<td id="lowestPrice">177.05$</td>
+</tr>
+<tr>
+<td>Letzter verfügbarer Kurs</td>
+<td id="lastAvailablePrice">177.45$</td>
+</tr>
+<tr>
+<td>Handelsvolumen</td>
+<td id="tradeVolume">43332082</td>
+</tr>
+<tr>
+<td>Letzter verfügbarer Kurs des vorherigen Tages</td>
+<td id="previousDayPrice">179.46$</td>
+</tr>
+<tr>
+<td>Preisänderung</td>
+<td id="priceChange">-2.01$</td>
+</tr>
+<tr>
+<td>Prozentuale Preisänderung</td>
+<td id="percentageChange">-1.12%</td>
+</tr>
+</table>
+<pre id="price"></pre>
+<script>
+    function getRealTimePrice() {
+        const ticker = document.getElementById('ticker').value;
+        const apiKey = '64d7d0670ee1f8.90133693'; // Ihr API-Schlüssel hier
+
+        fetch(`https://eodhistoricaldata.com/api/real-time/${ticker}?fmt=json&api_token=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('code').innerText = data.code;
+
+            // Umwandlung des Unix-Zeitstempels in ein normales Datum und Uhrzeitformat
+            const date = new Date(data.date * 1000);
+            const formattedDate = date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE');
+            document.getElementById('date').innerText = formattedDate;
+
+            // Hier können Sie den Code hinzufügen, um die anderen Datenpunkte aus der API zu aktualisieren
+            // Zum Beispiel:
+            document.getElementById('openingPrice').innerText = data.open ;
+            document.getElementById('highestPrice').innerText = data.high;
+            document.getElementById('lowestPrice').innerText = data.low;
+            document.getElementById('lastAvailablePrice').innerText = data.close;
+            document.getElementById('tradeVolume').innerText = data.volume;
+            document.getElementById('previousDayPrice').innerText = data.previousClose; // Angenommen, es gibt ein previousClose-Feld in den Daten
+document.getElementById('priceChange').innerText = (data.close - data.previousClose).toFixed(2) ; // Beispielberechnung
+document.getElementById('percentageChange').innerText = (((data.close - data.previousClose) / data.previousClose) * 100).toFixed(2) + "%"; // Beispielberechnung
+            // ... und so weiter für die anderen Datenpunkte
+
+            const formattedData = JSON.stringify(data, null, 2);
+            document.getElementById('price').innerText = formattedData;
+        })
+        .catch(error => {
+            console.error("Es gab einen Fehler beim Abrufen der Daten:", error);
+        });
+    }
+</script>
+</body>
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unix-Zeitstempel Konverter</title>
+</head>
+<body>
+<h1>Unix-Zeitstempel umwandeln</h1>
+<label for="timestampInput">Geben Sie den Unix-Zeitstempel ein:</label>
+<input id="timestampInput" placeholder="z.B. 1692190440" type="text"/>
+<button onclick="convertAndDisplay()">Umwandeln</button>
+<p id="result"></p>
+<script>
+function convertTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE');
+}
+
+function convertAndDisplay() {
+    const timestamp = parseInt(document.getElementById('timestampInput').value);
+    if (!isNaN(timestamp)) {
+        const result = convertTimestamp(timestamp);
+        document.getElementById('result').innerText = "Zeit: " + result;
+    } else {
+        document.getElementById('result').innerText = "Bitte geben Sie einen gültigen Unix-Zeitstempel ein.";
+    }
+}
+</script>
+</body>
+</html>
+</html>

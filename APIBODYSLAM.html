@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Anfrage für Aktienkurse</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        label, input, button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>API Anfrage für Aktienkurse</h1>
+<label for="stockSymbol">Aktienkürzel:</label>
+<input id="stockSymbol" type="text" placeholder="z.B. AAPL.US">
+<label for="datePicker">Datum:</label>
+<input id="datePicker" type="date">
+<button onclick="performApiRequest()">API Anfrage</button>
+
+<table border="1" id="stockData">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Datum</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Volume</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will populate here -->
+    </tbody>
+</table>
+
+<script>
+    function performApiRequest() {
+        const stockSymbol = document.getElementById('stockSymbol').value.toUpperCase();
+        const selectedDate = document.getElementById('datePicker').value;
+        
+        const apiUrl = `https://eodhistoricaldata.com/api/eod/${stockSymbol}?api_token=64d7d0670ee1f8.90133693&fmt=json&from=${selectedDate}&to=${selectedDate}`;
+        
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('stockData').querySelector('tbody');
+            // Existing rows are retained  // Clear existing rows
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                ['name', 'date', 'open', 'high', 'low', 'close', 'volume'].forEach(key => {
+                    const cell = document.createElement('td');
+                    cell.textContent = key === "name" ? stockSymbol : (item[key] || '-');
+                    row.appendChild(cell);
+                });
+                tbody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('There was an error fetching the data:', error);
+        });
+    }
+</script>
+
+</body>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Candlestick Werte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f7;
+            color: #333;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 22px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 10px 0;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        li:before {
+            content: '\2022';
+            color: #3498db;
+            font-size: 30px;
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>CORPUS SLAM Gewinnmitnahme</h1><br><p>Zeitraum A = letzte Kerze / Zeitraum B = vorletzte Kerze</p>
+    <table>
+<thead>
+<tr>
+<th>Zeitraum</th>
+<th>Low</th>
+<th>Opening</th>
+<th>Closing</th>
+<th>High</th>
+</tr>
+</thead>
+<tbody id="candlestick_data_table">
+<tr>
+<td>A</td>
+<td><input class="low" type="number" value="95"/></td>
+<td><input class="opening" type="number" value="100"/></td>
+<td><input class="closing" type="number" value="90"/></td>
+<td><input class="high" type="number" value="105"/></td>
+</tr>
+<tr>
+<td>B</td>
+<td><input class="low" type="number" value="80"/></td>
+<td><input class="opening" type="number" value="90"/></td>
+<td><input class="closing" type="number" value="85"/></td>
+<td><input class="high" type="number" value="95"/></td>
+</tr>
+</tbody>
+</table>
+    <div>
+<button id="calculateButton">Berechnen</button>
+<p id="coverStatus"></p>
+</div>
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function() {
+    const rows = document.querySelectorAll('#candlestick_data_table tr');
+    const coverStatus = document.getElementById('coverStatus');
+
+    const closingA = parseFloat(rows[0].querySelector('.closing').value);
+    let openingB = parseFloat(rows[1].querySelector('.opening').value);
+    let closingB = parseFloat(rows[1].querySelector('.closing').value);
+
+    // Ensure that openingB is the smaller value and closingB is the larger value
+    if (openingB > closingB) {
+        [openingB, closingB] = [closingB, openingB];
+    }
+
+    if (openingB <= closingA && closingA <= closingB) {
+        coverStatus.innerText = "NO COVER";
+    } else {
+        coverStatus.innerText = "COVER";
+    }
+});
+    </script>
+</body>
+</html>
